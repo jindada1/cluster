@@ -23,3 +23,6 @@ class Point(object):
     def tag(self):
         """The tag property."""
         return self._tag
+    @tag.setter
+    def tag(self, new_tag):
+        self._tag = new_tag

@@ -52,14 +52,14 @@
 
 当 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 一定时，点 <img src="https://render.githubusercontent.com/render/math?math=p"> 对样本 <img src="https://render.githubusercontent.com/render/math?math=q"> 的隶属度  <img src="https://render.githubusercontent.com/render/math?math=u_%7Bpq%7D%20%3D%20%20%5Cfrac%7B1%7D%7B%20%5Csum_%7Bi%3D1%7D%5Ek%20(%5Cfrac%7B||x_{p}-c_{q}||%7D%7B||x_{p}-c_{i}||%7D)%5E%7B%5Cfrac%7B2%7D%7Bm-1%7D%7D%20%7D" height="70"> 
 
-当 <img src="https://render.githubusercontent.com/render/math?math=U"> 一定时，聚类中心点 <img src="https://render.githubusercontent.com/render/math?math=i"> 为，<img src="https://render.githubusercontent.com/render/math?math=c_i%20%3D%20%5Cfrac%7B%20\sum_{j=1}^n%20u_%7Bij%7D%5Em%20%20x_j%20%7D%7B%5Csum_%7Bj%3D1%7D%5E%7Bn%7D%20u_%7Bij%7D%5Em%7D" height="70">
+当 <img src="https://render.githubusercontent.com/render/math?math=U"> 一定时，聚类中心点 <img src="https://render.githubusercontent.com/render/math?math=i"> 为，<img src="https://render.githubusercontent.com/render/math?math=c_i%20%3D%20%5Cfrac%7B%20\sum_{j=1}^n%20u_{ji}%5Em%20%20x_j%20%7D%7B%5Csum_%7Bj%3D1%7D%5E%7Bn%7D%20u_{ji}%5Em%7D" height="70">
 
 #### 算法
 
 伪码如下：
 
 ```
-设置模糊参数 m、误差阈值 alpha、随机初始化聚类中心点 C[]
+设置模糊参数 m、误差阈值 precise、随机初始化聚类中心点 C[]
 
 loop:
     计算最优隶属度矩阵 U[][]

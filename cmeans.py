@@ -1,5 +1,5 @@
 from point import Point
-from myutills import distance_of_two_points
+from myutills import *
 from loader import read_data, Point, print_points
 
 
@@ -17,7 +17,8 @@ def generate_points(samples: list, tags: list) -> list:
     step = len(samples) // len(tags)
     start = 0
     for tag in tags:
-        points.append(Point(samples[start].props, tag))
+        ps = [prop + 0.1 for prop in samples[start].props]
+        points.append(Point(ps, tag))
         start += step
 
     return points
@@ -34,11 +35,18 @@ def count_memberships(sample: Point, fuzzy: float, centers: list) -> list:
     Returns:
         list: 一组隶属度
     """
-    return [distance_of_two_points(sample, c) for c in centers]
+    row = []
+    for c in centers:
+        Dpq = distance_of_two_points(sample, c)
+        array = [(Dpq / distance_of_two_points(sample, i)) ** (1 / (fuzzy - 1))
+                 for i in centers]
+        row.append(1 / sum(array))
+
+    return row
 
 
-def count_membership_matrix(samples, fuzzy, centers):
-    """根据聚类中心点计算隶属度矩阵
+def count_membership_matrix(samples: list, fuzzy: float, centers: list) -> list:
+    """根据聚类中心点计算隶属度矩阵，M[point][center]
 
     Args:
         samples (list): 一组样本
@@ -52,13 +60,13 @@ def count_membership_matrix(samples, fuzzy, centers):
     for sample in samples:
         # 计算该样本到各个中心点的隶属度
         mem_row = count_memberships(sample, fuzzy, centers)
-        print(mem_row)
+        # print(mem_row)
         matrix.append(mem_row)
 
     return matrix
 
 
-def count_cluster_center(samples, fuzzy, membership):
+def count_cluster_center(samples: list, fuzzy: float, membership: list) -> list:
     """根据隶属度矩阵更新聚类中心点
 
     Args:
@@ -69,30 +77,41 @@ def count_cluster_center(samples, fuzzy, membership):
     Returns:
         list: 一组聚类中心点
     """
-    return []
+    C = membership[0]
+    for i in range(len(C)):
+        down = [(row[i] ** fuzzy) for row in membership]
+        up_points = [point_mul(p, u) for u, p in zip(down, samples)]
+        up_point = point_sum(up_points)
+        C[i] = point_sub(up_point, sum(down))
+
+    return C
 
 
-def distance_between(points1, points2):
-    """计算两组样本点之间的欧氏距离
+def updateC(to: list, _from: list):
+    """更新聚类中心点的坐标
 
     Args:
-        points1 (list): 第一组样本点
-        points2 (list): 第二组样本点
+        to (list): 原中心点
+        _from (list): 新坐标的中心点
 
-    Returns:
-        float: 两组样本点的欧氏距离
+    Raises:
+        Exception: 新旧中心点数量不同
     """
-    return 0
+    if not len(to) == len(_from):
+        raise Exception("无法更新两批长度不同的样本")
+
+    for i in range(len(to)):
+        to[i].props = _from[i].props
 
 
-def cluster(X, tags, fuzzy=2, precise=0.00001):
+def cluster(X: list, tags: list, fuzzy=2, precise=0.0000001) -> list:
     """模糊聚类过程
 
     Args:
         X (list): 待聚类的样本点
         tags (list): 类别
         fuzzy (int, optional): 模糊度. Defaults to 2.
-        precise (float, optional): 精度. Defaults to 0.00001.
+        precise (float, optional): 精度. Defaults to 0.0000001.
 
     Returns:
         list: 一组聚类中心点
@@ -104,7 +123,7 @@ def cluster(X, tags, fuzzy=2, precise=0.00001):
     U = []
     # 开始迭代
     iter_num = 0
-    while iter_num < 10:
+    while iter_num < 1000:
         iter_num += 1
         # 根据 C 计算最优隶属度矩阵 U
         U = count_membership_matrix(X, fuzzy, C)
@@ -112,12 +131,57 @@ def cluster(X, tags, fuzzy=2, precise=0.00001):
         C1 = count_cluster_center(X, fuzzy, U)
         # 收敛
         if distance_between(C, C1) < precise:
-            C = C1
+            updateC(C, C1)
+            print("在第%d次迭代时收敛" % iter_num)
             break
         # 更新聚类中心
-        C = C1
+        updateC(C, C1)
     # 返回新的聚类中心点
     return C
+
+
+def classify(sample: Point, centers: list) -> float:
+    """判断样本点在传入类别中属于哪个类别
+
+    Args:
+        sample (Point): 样本点
+        centers (list): 一组聚类中心
+
+    Returns:
+        float: 类别
+    """
+    mindis = distance_of_two_points(sample, centers[0])
+    tag = centers[0].tag
+    for center in centers:
+        dis = distance_of_two_points(sample, center)
+        if mindis > dis:
+            mindis = dis
+            tag = center.tag
+
+    return tag
+
+
+def verify(samples: list, centers: list) -> (float, dict):
+    """验证聚类中心的准确度
+
+    Args:
+        samples (list): 样本点
+        centers (list): 聚类中心
+
+    Returns:
+        float: 准确率
+    """
+    res = {}
+    for c in centers:
+        res[c.tag] = []
+
+    right = 0
+    for sample in samples:
+        predict = classify(sample, centers)
+        right += (predict == sample.tag)
+        res[predict].append(sample.props)
+
+    return right / len(samples), res
 
 
 def main():
@@ -130,7 +194,17 @@ def main():
         raise Exception("数据读取异常")
 
     # 开始聚类
-    cluster(data, tags)
+    C = cluster(data, tags)
+    # print_points(C)
+    # 检查聚类效果
+    accuracy, res = verify(data, C)
+    print(accuracy)
+    for key in res:
+        print(key, res[key])
+
+
+def fname(arg):
+    arg[0] += 1
 
 
 if __name__ == "__main__":
