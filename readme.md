@@ -33,7 +33,11 @@
 
 + <img src="https://render.githubusercontent.com/render/math?math=C+=+\{c_{1},c_{2},...,c_{k}\}"> 表示 <img src="https://render.githubusercontent.com/render/math?math=k"> 个类别
 
-+ 对于样本<img src="https://render.githubusercontent.com/render/math?math=p"> 来说，其属于类别 <img src="https://render.githubusercontent.com/render/math?math=j"> 的概率为 <img src="https://render.githubusercontent.com/render/math?math=u_{pj}">，则可以构建一个概率矩阵，称之为**隶属度矩阵** <img src="https://render.githubusercontent.com/render/math?math=U%3D%5Cbegin%7Bpmatrix%7Du_%7B11%7D%20%26%20...%20%26%20u_%7B1k%7D%20%5C%5C%20...%20%26%20%26%20...%20%5C%5Cu_%7Bn1%7D%20%26%20...%20%26%20u_%7Bnk%7D%20%5Cend%7Bpmatrix%7D"> ，对于其中的任意一点，有 <img src="https://render.githubusercontent.com/render/math?math=%5Csum_%7Bj%3D1%7D%5E%7Bk%7D%20u_%7Bpj%7D=1"> 
++ 对于样本<img src="https://render.githubusercontent.com/render/math?math=p"> 来说，其属于类别 <img src="https://render.githubusercontent.com/render/math?math=j"> 的概率为 <img src="https://render.githubusercontent.com/render/math?math=u_{pj}">，则可以构建一个概率矩阵，称之为**隶属度矩阵** U
+
+    <img src="https://render.githubusercontent.com/render/math?math=U%3D%5Cbegin%7Bpmatrix%7Du_%7B11%7D%20%26%20...%20%26%20u_%7B1k%7D%20%5C%5C%20...%20%26%20%26%20...%20%5C%5Cu_%7Bn1%7D%20%26%20...%20%26%20u_%7Bnk%7D%20%5Cend%7Bpmatrix%7D" height=60> 
+
+    对于其中的任意一个样本 <img src="https://render.githubusercontent.com/render/math?math=p">，它对于所有类别的隶属度（概率）之和为 1 ，即 <img src="https://render.githubusercontent.com/render/math?math=%5Csum_%7Bj%3D1%7D%5E%7Bk%7D%20u_%7Bpj%7D=1"> 
 
 + 定义样本点 <img src="https://render.githubusercontent.com/render/math?math=x_{j}"> 到类中心 <img src="https://render.githubusercontent.com/render/math?math=c_{i}"> 的距离为： <img src="https://render.githubusercontent.com/render/math?math=d_%7Bij%7D%5E2%20%3D%20%7C%7C%20x_j%20-%20c_i%20%7C%7C%5E2%20">   
 
@@ -60,7 +64,7 @@
 loop:
     计算最优隶属度矩阵 U[][]
     根据隶属度矩阵计算新的聚类中心点 C'[]
-    if C[] 和 C'[] 的距离 < 误差阈值 alpha:
+    if C[] 和 C'[] 的距离 < 误差阈值 precise:
         将 C 更新为 C‘
         break
     将 C 更新为 C‘
