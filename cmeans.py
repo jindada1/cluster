@@ -1,29 +1,61 @@
-from loader import read_data
+from point import Point
+from myutills import distance_of_two_points
+from loader import read_data, Point, print_points
 
 
-def generate_points(sample, tags):
-    """参照传入的参考样本点，为传入的每一种类型生成一个点
+def generate_points(samples: list, tags: list) -> list:
+    """参照传入的样本点，为传入的每一种类型生成一个点
+
     Args:
-        sample: 参考样本点
+        samples: 参考样本点
         tags: 样本点的所有类型
+
     Returns:
         list: 一组样本点
     """
-    return []
+    points = []
+    step = len(samples) // len(tags)
+    start = 0
+    for tag in tags:
+        points.append(Point(samples[start].props, tag))
+        start += step
+
+    return points
+
+
+def count_memberships(sample: Point, fuzzy: float, centers: list) -> list:
+    """计算某一个样本到所有聚类中心点的隶属度
+
+    Args:
+        sample (Point): 样本
+        fuzzy (float): 模糊度
+        centers (list): 聚类中心点
+
+    Returns:
+        list: 一组隶属度
+    """
+    return [distance_of_two_points(sample, c) for c in centers]
 
 
 def count_membership_matrix(samples, fuzzy, centers):
     """根据聚类中心点计算隶属度矩阵
 
     Args:
-        samples (list): 样本
+        samples (list): 一组样本
         fuzzy (float): 模糊度
         centers (list): 聚类中心点
 
     Returns:
         list: 隶属度矩阵
     """
-    return []
+    matrix = []
+    for sample in samples:
+        # 计算该样本到各个中心点的隶属度
+        mem_row = count_memberships(sample, fuzzy, centers)
+        print(mem_row)
+        matrix.append(mem_row)
+
+    return matrix
 
 
 def count_cluster_center(samples, fuzzy, membership):
@@ -66,12 +98,13 @@ def cluster(X, tags, fuzzy=2, precise=0.00001):
         list: 一组聚类中心点
     """
     # 根据样本生成指定数量的聚类中心点
-    C = generate_points(X[0], tags)
+    C = generate_points(X, tags)
+    # print_points(C)
     # 设置隶属度矩阵
     U = []
     # 开始迭代
     iter_num = 0
-    while iter_num:
+    while iter_num < 10:
         iter_num += 1
         # 根据 C 计算最优隶属度矩阵 U
         U = count_membership_matrix(X, fuzzy, C)

@@ -1,30 +1,4 @@
-class Point(object):
-    """待聚类的样本点类型
-    Attributes:
-        props: 样本点的属性（坐标）
-        tag: 样本点所属的类别
-    """
-    def __init__(self, props, tag):
-        
-        self._props = props
-        self._tag = tag
-        
-    @property
-    def props(self):
-        """The props property."""
-        return self._props
-    @props.setter
-    def props(self, new_props):
-        if not len(new_props) == len(self._props):
-            raise Exception("属性维度不应发生改变")
-        self._props = new_props
-
-    @property
-    def tag(self):
-        """The tag property."""
-        return self._tag
-    
-        
+from point import Point
 
 def parse_line(line):
     """解析一行文本，规则为：由制表符 \\t 分割数据，最后一个数据为类别
@@ -76,10 +50,17 @@ def show():
     """
     filename = "./iris.txt"
     samples, tags = read_data(filename)
-    for data in samples:
-        print(data.props, data.tag)
+    print_points(samples)
     print(tags)
 
+def print_points(samples):
+    """将样本点输出到控制台
+    
+    Args:
+        samples (list): 样本点        
+    """
+    for data in samples:
+        print(data.props, data.tag)
 
 if __name__ == "__main__":
     show()
