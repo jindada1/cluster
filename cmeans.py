@@ -118,7 +118,8 @@ def cluster(X: list, tags: list, fuzzy=2, precise=0.0000001) -> list:
     """
     # 根据样本生成指定数量的聚类中心点
     C = generate_points(X, tags)
-    # print_points(C)
+    print("初始类中心点")
+    print_points(C)
     # 设置隶属度矩阵
     U = []
     # 开始迭代
@@ -179,7 +180,7 @@ def verify(samples: list, centers: list) -> (float, dict):
     for sample in samples:
         predict = classify(sample, centers)
         right += (predict == sample.tag)
-        res[predict].append(sample.props)
+        res[predict].append(sample)
 
     return right / len(samples), res
 
@@ -195,16 +196,15 @@ def main():
 
     # 开始聚类
     C = cluster(data, tags)
-    # print_points(C)
+    print("聚类后的类中心")
+    print_points(C)
     # 检查聚类效果
     accuracy, res = verify(data, C)
-    print(accuracy)
+    print("聚类准确率为%f"%accuracy)
+    print("聚类的结果如下")
     for key in res:
-        print(key, res[key])
-
-
-def fname(arg):
-    arg[0] += 1
+        print("属于第%s类的样本有"%key)
+        print_points(res[key])
 
 
 if __name__ == "__main__":
