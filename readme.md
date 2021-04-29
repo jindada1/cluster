@@ -260,11 +260,24 @@ loop:
 
 #### 问题分析
 
+定义：
+
 + <img src="https://render.githubusercontent.com/render/math?math=V+=+\{v_{1},v_{2},v_{3},...,v_{n}\}"> 表示 <img src="https://render.githubusercontent.com/render/math?math=n"> 个样本
+
 + 每两个样本之间或多或少都有联系，如果样本 <img src="https://render.githubusercontent.com/render/math?math=i"> 和样本 <img src="https://render.githubusercontent.com/render/math?math=j"> 之间的联系用 <img src="https://render.githubusercontent.com/render/math?math=w_{ij}"> 来衡量（ <img src="https://render.githubusercontent.com/render/math?math=i,j{\in}[1,n]">），则所有的联系可以构成一个 <img src="https://render.githubusercontent.com/render/math?math=n{\times}n"> 的矩阵 <img src="https://render.githubusercontent.com/render/math?math=W=\begin{pmatrix}w_{11}%20%26%20...%20%26%20w_{1n}%20\\%20...%20%26%20%26%20...%20\\w_{n1}%20%26%20...%20%26%20w_{nn}%20\end{pmatrix}" height=60>
-+ 将样本视为一组点，点与点之间的联系视为带权值的边，则可以构造出一个图 <img src="https://render.githubusercontent.com/render/math?math=G(V,E)"> 其中 <img src="https://render.githubusercontent.com/render/math?math=W{\Leftrightarrow}E">，**聚类的过程就转化为对图的一种划分**（切图），将样本聚为 <img src="https://render.githubusercontent.com/render/math?math=k"> 类等价于将图 <img src="https://render.githubusercontent.com/render/math?math=G"> 切成 <img src="https://render.githubusercontent.com/render/math?math=k"> 个子图：<img src="https://render.githubusercontent.com/render/math?math=cut(G)=(A_{1},A_{2},...,A_{k})"> 
-+ 一个好的聚类意味着子图之间的联系尽可能少，子图内部的点聚合度尽可能高（这些子图**高内聚低耦合**）
-+ 
+
+将样本视为一组点，点与点之间的联系视为带权值的边，则可以构造出一个图 <img src="https://render.githubusercontent.com/render/math?math=G(V,E)"> 其中 <img src="https://render.githubusercontent.com/render/math?math=W{\Leftrightarrow}E">，**聚类的过程就转化为对图的一种划分**（切图），将样本聚为 <img src="https://render.githubusercontent.com/render/math?math=k"> 类等价于将图 <img src="https://render.githubusercontent.com/render/math?math=G"> 切成 <img src="https://render.githubusercontent.com/render/math?math=k"> 个子图：<img src="https://render.githubusercontent.com/render/math?math=cut(G)=(A_{1},A_{2},...,A_{k})" height=20> 
+
+一个好的聚类意味着子图之间的联系尽可能少，子图内部的点聚合度尽可能高（这些子图**高内聚低耦合**）
+
++ 将两个不相交的子图 <img src="https://render.githubusercontent.com/render/math?math=A"> 和 <img src="https://render.githubusercontent.com/render/math?math=B"> 之间的联系定义为 <img src="https://render.githubusercontent.com/render/math?math=W(A,B)={\sum_{i{\in}A,j{\in}B}%20w_{ij}}" height=25> ，即所有连接两个子图的边权重之和
+
++ 将子图 <img src="https://render.githubusercontent.com/render/math?math=A"> 内部的聚合度定义为 <img src="https://render.githubusercontent.com/render/math?math=vol(A)={\sum_{i{\in}A}d_i}" height=25> ，其中 <img src="https://render.githubusercontent.com/render/math?math=d_i"> 为点 <img src="https://render.githubusercontent.com/render/math?math=i"> 的度，即与 <img src="https://render.githubusercontent.com/render/math?math=i"> 相连的所有边的权重之和 <img src="https://render.githubusercontent.com/render/math?math=d_i=\sum_{j%3D1%7D%5E%7Bn}w_{ij}" height=25>
+
+
+所以对于一个子图 A，可以定义一个指标 α = A 与外界的联系度 / A 内部的聚合度
+
+
 
 #### 算法表述
 
