@@ -13,7 +13,7 @@
 2. 用谱聚类方法对 `iris` 数据作聚类
 3. 递交实验报告，源代码
 
-## 实践
+## 实现
 
 ### Fuzzy c-means clustering
 
@@ -35,26 +35,26 @@
 
 + 对于样本<img src="https://render.githubusercontent.com/render/math?math=p"> 来说，其属于类别 <img src="https://render.githubusercontent.com/render/math?math=j"> 的概率为 <img src="https://render.githubusercontent.com/render/math?math=u_{pj}">，则可以构建一个概率矩阵，称之为**隶属度矩阵** U
 
-    <img src="https://render.githubusercontent.com/render/math?math=U%3D%5Cbegin%7Bpmatrix%7Du_%7B11%7D%20%26%20...%20%26%20u_%7B1k%7D%20%5C%5C%20...%20%26%20%26%20...%20%5C%5Cu_%7Bn1%7D%20%26%20...%20%26%20u_%7Bnk%7D%20%5Cend%7Bpmatrix%7D" height=60> 
+    <img src="https://render.githubusercontent.com/render/math?math=U%3D\begin{pmatrix}u_{11}%20%26%20...%20%26%20u_{1k}%20\\%20...%20%26%20%26%20...%20\\u_{n1}%20%26%20...%20%26%20u_{nk}%20\end{pmatrix}" height=60> 
 
-    对于其中的任意一个样本 <img src="https://render.githubusercontent.com/render/math?math=p">，它对于所有类别的隶属度（概率）之和为 1 ，即 <img src="https://render.githubusercontent.com/render/math?math=%5Csum_%7Bj%3D1%7D%5E%7Bk%7D%20u_%7Bpj%7D=1"> 
+    对于其中的任意一个样本 <img src="https://render.githubusercontent.com/render/math?math=p">，它对于所有类别的隶属度（概率）之和为 1 ，即 <img src="https://render.githubusercontent.com/render/math?math=\sum_{j%3D1}%5E{k}%20u_{pj}=1"> 
 
-+ 定义样本点 <img src="https://render.githubusercontent.com/render/math?math=x_{j}"> 到类中心 <img src="https://render.githubusercontent.com/render/math?math=c_{i}"> 的距离为： <img src="https://render.githubusercontent.com/render/math?math=d_%7Bij%7D%5E2%20%3D%20%7C%7C%20x_j%20-%20c_i%20%7C%7C%5E2%20">   
++ 定义样本点 <img src="https://render.githubusercontent.com/render/math?math=x_{j}"> 到类中心 <img src="https://render.githubusercontent.com/render/math?math=c_{i}"> 的距离为： <img src="https://render.githubusercontent.com/render/math?math=d_{ij}%5E2%20%3D%20%7C%7C%20x_j%20-%20c_i%20%7C%7C%5E2%20">   
 
 
-则所有点 <img src="https://render.githubusercontent.com/render/math?math=X"> 到所有类 <img src="https://render.githubusercontent.com/render/math?math=C"> 的距离之和为：<img src="https://render.githubusercontent.com/render/math?math=J(U,C_{k})%20%3D%20%5Csum_%7Bi%3D1%7D%5Ek%20%5Csum_%7Bj%3D1%7D%5En%20u_%7Bij%7D%5Em%20d_%7Bij%7D%5E2%20">，其中 <img src="https://render.githubusercontent.com/render/math?math=m"> 代表模糊系数
+则所有点 <img src="https://render.githubusercontent.com/render/math?math=X"> 到所有类 <img src="https://render.githubusercontent.com/render/math?math=C"> 的距离之和为：<img src="https://render.githubusercontent.com/render/math?math=J(U,C_{k})%20%3D%20\sum_{i%3D1}%5Ek%20\sum_{j%3D1}%5En%20u_{ij}%5Em%20d_{ij}%5E2%20">，其中 <img src="https://render.githubusercontent.com/render/math?math=m"> 代表模糊系数
 
 我们认为一个好的聚类应该意味着**总距离尽可能的小**
 
-于是问题变为：在约束条件 <img src="https://render.githubusercontent.com/render/math?math=%5Csum_%7Bj%3D1%7D%5E%7Bk%7D%20u_%7Bpj%7D=1"> 下，求 <img src="https://render.githubusercontent.com/render/math?math=min(J(U,C_{k}))">。这个优化问题通常使用交互式策略求解，即给定 <img src="https://render.githubusercontent.com/render/math?math=U"> 关于 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 求最小，再给定 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 关于 <img src="https://render.githubusercontent.com/render/math?math=U"> 求最小。
+于是问题变为：在约束条件 <img src="https://render.githubusercontent.com/render/math?math=\sum_{j%3D1}%5E{k}%20u_{pj}=1"> 下，求 <img src="https://render.githubusercontent.com/render/math?math=min(J(U,C_{k}))">。这个优化问题通常使用交互式策略求解，即给定 <img src="https://render.githubusercontent.com/render/math?math=U"> 关于 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 求最小，再给定 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 关于 <img src="https://render.githubusercontent.com/render/math?math=U"> 求最小。
 
 使用拉格朗日乘数法计算得到：
 
-当 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 一定时，点 <img src="https://render.githubusercontent.com/render/math?math=p"> 对样本 <img src="https://render.githubusercontent.com/render/math?math=q"> 的隶属度  <img src="https://render.githubusercontent.com/render/math?math=u_%7Bpq%7D%20%3D%20%20%5Cfrac%7B1%7D%7B%20%5Csum_%7Bi%3D1%7D%5Ek%20(%5Cfrac%7B||x_{p}-c_{q}||%7D%7B||x_{p}-c_{i}||%7D)%5E%7B%5Cfrac%7B2%7D%7Bm-1%7D%7D%20%7D" height="70"> 
+当 <img src="https://render.githubusercontent.com/render/math?math=C_{k}"> 一定时，点 <img src="https://render.githubusercontent.com/render/math?math=p"> 对样本 <img src="https://render.githubusercontent.com/render/math?math=q"> 的隶属度  <img src="https://render.githubusercontent.com/render/math?math=u_{pq}%20%3D%20%20\frac{1}{%20\sum_{i%3D1}%5Ek%20(\frac{||x_{p}-c_{q}||}{||x_{p}-c_{i}||})%5E{\frac{2}{m-1}}%20}" height="70"> 
 
-当 <img src="https://render.githubusercontent.com/render/math?math=U"> 一定时，聚类中心点 <img src="https://render.githubusercontent.com/render/math?math=i"> 为，<img src="https://render.githubusercontent.com/render/math?math=c_i%20%3D%20%5Cfrac%7B%20\sum_{j=1}^n%20u_{ji}%5Em%20%20x_j%20%7D%7B%5Csum_%7Bj%3D1%7D%5E%7Bn%7D%20u_{ji}%5Em%7D" height="70">
+当 <img src="https://render.githubusercontent.com/render/math?math=U"> 一定时，聚类中心点 <img src="https://render.githubusercontent.com/render/math?math=i"> 为，<img src="https://render.githubusercontent.com/render/math?math=c_i%20%3D%20\frac{%20\sum_{j=1}^n%20u_{ji}%5Em%20%20x_j%20}{\sum_{j%3D1}%5E{n}%20u_{ji}%5Em}" height="70">
 
-#### 算法
+#### 算法表述
 
 伪码如下：
 
@@ -72,11 +72,11 @@ loop:
 用 C 对样本进行分类
 ```
 
-#### 代码实现
+#### 源代码
 
 见 `cmeans.py`
 
-#### 实验结果
+#### 运行结果
 
 以下输出包含：初始类中心点、迭代次数、聚类结果（每类包含的样本，类中心）、正确率
 
@@ -250,3 +250,24 @@ loop:
 [6.2, 3.4, 5.4, 2.3] 2.0
 ```
 
+### spectral clustering
+
+**参考**
+
+> https://www.bilibili.com/video/BV1kt411X7Zh
+>
+> https://www.cnblogs.com/pinard/p/6221564.html
+
+#### 问题分析
+
++ <img src="https://render.githubusercontent.com/render/math?math=V+=+\{v_{1},v_{2},v_{3},...,v_{n}\}"> 表示 <img src="https://render.githubusercontent.com/render/math?math=n"> 个样本
++ 每两个样本之间或多或少都有联系，如果样本 <img src="https://render.githubusercontent.com/render/math?math=i"> 和样本 <img src="https://render.githubusercontent.com/render/math?math=j"> 之间的联系用 <img src="https://render.githubusercontent.com/render/math?math=w_{ij}"> 来衡量（ <img src="https://render.githubusercontent.com/render/math?math=i,j{\in}[1,n]">），则所有的联系可以构成一个 <img src="https://render.githubusercontent.com/render/math?math=n{\times}n"> 的矩阵 <img src="https://render.githubusercontent.com/render/math?math=W=\begin{pmatrix}w_{11}%20%26%20...%20%26%20w_{1n}%20\\%20...%20%26%20%26%20...%20\\w_{n1}%20%26%20...%20%26%20w_{nn}%20\end{pmatrix}" height=60>
++ 将样本视为一组点，点与点之间的联系视为带权值的边，则可以构造出一个图 <img src="https://render.githubusercontent.com/render/math?math=G(V,E)"> 其中 <img src="https://render.githubusercontent.com/render/math?math=W{\Leftrightarrow}E">，**聚类的过程就转化为对图的一种划分**（切图），将样本聚为 <img src="https://render.githubusercontent.com/render/math?math=k"> 类等价于将图 <img src="https://render.githubusercontent.com/render/math?math=G"> 切成 <img src="https://render.githubusercontent.com/render/math?math=k"> 个子图：<img src="https://render.githubusercontent.com/render/math?math=cut(G)=(A_{1},A_{2},...,A_{k})"> 
++ 一个好的聚类意味着子图之间的联系尽可能少，子图内部的点聚合度尽可能高（这些子图**高内聚低耦合**）
++ 
+
+#### 算法表述
+
+#### 源代码
+
+#### 运行结果
