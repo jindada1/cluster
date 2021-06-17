@@ -1,5 +1,5 @@
 from point import Point
-from myutills import *
+import myutills as utils
 from loader import read_data, Point, print_points
 
 
@@ -37,8 +37,8 @@ def count_memberships(sample: Point, fuzzy: float, centers: list) -> list:
     """
     row = []
     for c in centers:
-        Dpq = distance_of_two_points(sample, c)
-        array = [(Dpq / distance_of_two_points(sample, i)) ** (1 / (fuzzy - 1))
+        Dpq = utils.distance_of_two_points(sample, c)
+        array = [(Dpq / utils.distance_of_two_points(sample, i)) ** (1 / (fuzzy - 1))
                  for i in centers]
         row.append(1 / sum(array))
 
@@ -80,9 +80,9 @@ def count_cluster_center(samples: list, fuzzy: float, membership: list) -> list:
     C = membership[0]
     for i in range(len(C)):
         down = [(row[i] ** fuzzy) for row in membership]
-        up_points = [point_mul(p, u) for u, p in zip(down, samples)]
-        up_point = point_sum(up_points)
-        C[i] = point_sub(up_point, sum(down))
+        up_points = [utils.point_mul(p, u) for u, p in zip(down, samples)]
+        up_point = utils.point_sum(up_points)
+        C[i] = utils.point_sub(up_point, sum(down))
 
     return C
 
@@ -131,7 +131,7 @@ def cluster(X: list, tags: list, fuzzy=2, precise=0.0000001) -> list:
         # 根据隶属度矩阵 U 计算新的聚类中心点 C1
         C1 = count_cluster_center(X, fuzzy, U)
         # 收敛
-        if distance_between(C, C1) < precise:
+        if utils.distance_between(C, C1) < precise:
             updateC(C, C1)
             print("在第%d次迭代时收敛" % iter_num)
             break
@@ -151,10 +151,10 @@ def classify(sample: Point, centers: list) -> float:
     Returns:
         float: 类别
     """
-    mindis = distance_of_two_points(sample, centers[0])
+    mindis = utils.distance_of_two_points(sample, centers[0])
     tag = centers[0].tag
     for center in centers:
-        dis = distance_of_two_points(sample, center)
+        dis = utils.distance_of_two_points(sample, center)
         if mindis > dis:
             mindis = dis
             tag = center.tag

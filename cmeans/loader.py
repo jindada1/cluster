@@ -22,8 +22,6 @@ def read_data(filename):
         filename: 存放数据的文件路径
     Returns:
         一组 Point 对象
-    Raise:
-        
     """
     points = []
     tags = []
