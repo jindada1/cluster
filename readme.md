@@ -46,7 +46,7 @@ $ python .\cmeans.py
 运行 Spectral
 
 ```bash
-$ cd .\cmeans\
+$ cd .\spectral\
 $ pip install -r .\requirements.txt
 $ python .\spectral.py
 ```
